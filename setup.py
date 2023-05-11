@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'tf_sniffer = hthesis2.tf_sniffer:main'
+            'tf_sniffer = hthesis3.tf_sniffer:main'
         ],
     },
 )

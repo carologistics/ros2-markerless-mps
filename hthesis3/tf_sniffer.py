@@ -85,7 +85,7 @@ class TFSniffer(Node):
                             'map', transform.child_frame_id, transform.header.stamp)
                     except Exception as e:
                         self.get_logger().error('Failed to lookup transform: %s' % str(e))
-                        return
+                        return #TODO: check if this is correct
                     x, y = self.get_position_in_rcll(transform)
                     self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
                     if x > 0 and  x < 8 and y > 0 and y < 9:
@@ -97,13 +97,14 @@ class TFSniffer(Node):
             
             
             # check for laser lines in tf tree
-            if 'laser_line_transformed' in transform.child_frame_id:
-                """try:
+            # TODO: calculate average of endpoints of laser line
+            if 'laser_line_avg' in transform.child_frame_id:
+                try:
                     transform = self.tf_buffer.lookup_transform(
-                        'map', transform.child_frame_id, transform.header.stamp)
+                        'map', transform.child_frame_id, rclpy.time.Time())#transform.header.stamp)
                 except Exception as e:
                     self.get_logger().error('Failed to lookup transform: %s' % str(e))
-                    return"""
+                    return
                 x, y = self.get_position_in_rcll(transform)
                 quaternion = (
                         transform.transform.rotation.x,
@@ -212,18 +213,29 @@ class TFSniffer(Node):
         for y in range(1,9):
             output = str(9-y) + ' |'
             for x in range(1,8):
-
-                if self.orientation_magenta_arr[8-x][9-y] < 100:
+                max_value = 0
+                orientation = 5
+                for i in range(len(self.orientation)):
+                    if self.orientation_magenta_arr[8-x][9-y][i] > max_value:
+                        max_value = self.orientation_magenta_arr[8-x][9-y][i]
+                        orientation = i
+                if orientation < 3 and max_value > 5:
                     output += ' '
-                if self.orientation_magenta_arr[8-x][9-y] < 370:
-                    output += str(int(self.orientation_magenta_arr[8-x][9-y])) + '|'
+                if max_value > 5 and orientation < 4:
+                    output += self.orientation[orientation] + '|'
                 else:
                     output += '   |'
             for x in range(1,8):
-                if self.orientation_cyan_arr[x][9-y] < 100:
+                max_value = 0
+                orientation = 5
+                for i in range(len(self.orientation)):
+                    if self.orientation_cyan_arr[x][9-y][i] > max_value:
+                        max_value = self.orientation_cyan_arr[x][9-y][i]
+                        orientation = i
+                if orientation < 3  and max_value > 5:
                     output += ' '
-                if self.orientation_cyan_arr[x][9-y] < 370:
-                    output += str(int(self.orientation_cyan_arr[x][9-y])) + '|'
+                if max_value > 5 and orientation < 4:
+                    output += self.orientation[orientation] + '|'
                 else:
                     output += '   |'
             self.get_logger().info(output)
