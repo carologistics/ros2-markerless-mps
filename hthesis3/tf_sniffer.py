@@ -97,7 +97,7 @@ class TFSniffer(Node):
             
             
             # check for laser lines in tf tree
-            # TODO: calculate average of endpoints of laser line
+            # TODO: calculate average of endpoints of laser line 
             if 'laser_line_avg' in transform.child_frame_id:
                 try:
                     transform = self.tf_buffer.lookup_transform(
