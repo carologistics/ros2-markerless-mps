@@ -96,7 +96,7 @@ class ObjectDetectorNode(Node):
     def set_clock(self, msg):
         self.current_time = msg.clock
 
-        self.get_logger().info('Received message at time: ' )
+        #self.get_logger().info('Received message at time: ' )
 
 
     def send_camera_static_tf(self):
@@ -129,10 +129,11 @@ class ObjectDetectorNode(Node):
 
     def image_callback(self, msg):
         cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        time = self.current_time
+        time = msg.header.stamp
         result = self.detect_objects(cv_image)
         
         if self.depth_image is not None:
+            self.get_logger().info('Received message at time: ' + str(time))
             depth_image = self.bridge.imgmsg_to_cv2(self.depth_image, desired_encoding='passthrough')
             self.publish_objects(result, depth_image,time)
     
@@ -212,7 +213,9 @@ class ObjectDetectorNode(Node):
             
 
             #EXPERIMENTAL
-            depth_roi = depth_roi + 0.3
+            #if class is MPS
+            if bbox[5] == 3:
+                depth_roi = depth_roi + 0.15
 
             depth = np.median(depth_roi)
             if np.isnan(depth):

@@ -15,12 +15,13 @@ qos_profile = QoSProfile(
     depth=1
 )
 
+
 class TFSniffer(Node):
     
     def __init__(self):
         super().__init__('tf_sniffer')
 
-        self.tf_buffer = tf2_ros.Buffer()
+        self.tf_buffer = tf2_ros.Buffer(rclpy.duration.Duration(seconds=10.0))
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
         self.mps_magenta_arr = [[0 for j in range(9)] for i in range(8)]
@@ -33,7 +34,7 @@ class TFSniffer(Node):
         self.classes_type_cyan_arr = [[[0 for k in range(5)] for j in range(9)] for i in range(8)]
 
         self.classes = ['SS', 'RS', 'CS', 'DS', 'BS']
-        self.orientation = ['0', '45', '90', '135']
+        self.orientation = ['  0', ' 45', ' 90', '135']
         self.create_subscription(
             TFMessage,
             '/tf',
@@ -102,9 +103,34 @@ class TFSniffer(Node):
                 try:
                     transform = self.tf_buffer.lookup_transform(
                         'map', transform.child_frame_id, rclpy.time.Time())#transform.header.stamp)
+                    if 'e1' in transform.child_frame_id:
+                        transform2 = self.tf_buffer.lookup_transform(
+                            'map', transform.child_frame_id[:-1] + '2', rclpy.time.Time())
+                    else:
+                        transform2 = self.tf_buffer.lookup_transform(
+                            'map', transform.child_frame_id[:-1] + '1', rclpy.time.Time())
                 except Exception as e:
                     self.get_logger().error('Failed to lookup transform: %s' % str(e))
                     return
+                #if(int(transform.transform.translation.x) != int(transform2.transform.translation.x) or int(transform.transform.translation.y) != int(transform2.transform.translation.y)):
+                #    return
+                
+                # get average of both endpoints
+                transform.transform.translation.x = (transform.transform.translation.x + transform2.transform.translation.x) / 2
+                transform.transform.translation.y = (transform.transform.translation.y + transform2.transform.translation.y) / 2
+                xint = int(transform.transform.translation.x)
+                yint = int(transform.transform.translation.y)
+                #filter for edge cases
+                if xint == 0:
+                    xint = 1
+                if yint == 0:
+                    yint = 1
+                xhelp = abs(transform.transform.translation.x %  xint)
+                yhelp = abs(transform.transform.translation.y % yint)
+                #self.get_logger().info('Got Line: x: %f , y: %f' % (xhelp,yhelp))
+                if xhelp < 0.15 or xhelp > 0.85 or yhelp < 0.15 or  yhelp > 0.85:
+                    return
+                    
                 x, y = self.get_position_in_rcll(transform)
                 quaternion = (
                         transform.transform.rotation.x,
@@ -121,7 +147,7 @@ class TFSniffer(Node):
                     self.orientation_cyan_arr[x][y][yaw] += 1
                 elif x < 0 and x > -8 and y > 0 and y < 9:
                     #todo check if mps already found at position
-                    self.orientation_magenta_arr[x*-1][y][yaw]  += yaw
+                    self.orientation_magenta_arr[x*-1][y][yaw]  += 1
                 
 
     def shutdown_callback(self):
@@ -187,7 +213,7 @@ class TFSniffer(Node):
                     if self.classes_magenta_arr[8-x][9-y][i] > max_value:
                         max_value = self.classes_magenta_arr[8-x][9-y][i]
                         class_name = self.classes[i]
-                if max_value < 8:
+                if max_value < 5:
                     #self.get_logger().info('Magenta %s %d %d: %d' % (class_name,x,y,max_value))
                     class_name = '  '
                 output += class_name + '|'
@@ -199,7 +225,7 @@ class TFSniffer(Node):
                     if self.classes_type_cyan_arr[x][9-y][i] > max_value:
                         max_value = self.classes_type_cyan_arr[x][9-y][i]
                         class_name = self.classes[i]
-                if max_value < 8:
+                if max_value < 5:
                     #self.get_logger().info('Magenta %s %d %d: %d' % (class_name,x,y,max_value))
                     class_name = '  '
                 output += class_name + '|'
@@ -219,9 +245,7 @@ class TFSniffer(Node):
                     if self.orientation_magenta_arr[8-x][9-y][i] > max_value:
                         max_value = self.orientation_magenta_arr[8-x][9-y][i]
                         orientation = i
-                if orientation < 3 and max_value > 5:
-                    output += ' '
-                if max_value > 5 and orientation < 4:
+                if max_value > 5:
                     output += self.orientation[orientation] + '|'
                 else:
                     output += '   |'
@@ -229,12 +253,10 @@ class TFSniffer(Node):
                 max_value = 0
                 orientation = 5
                 for i in range(len(self.orientation)):
-                    if self.orientation_cyan_arr[x][9-y][i] > max_value:
+                    if self.orientation_cyan_arr[x][9-y][i] >= max_value:
                         max_value = self.orientation_cyan_arr[x][9-y][i]
                         orientation = i
-                if orientation < 3  and max_value > 5:
-                    output += ' '
-                if max_value > 5 and orientation < 4:
+                if max_value > 5:
                     output += self.orientation[orientation] + '|'
                 else:
                     output += '   |'
