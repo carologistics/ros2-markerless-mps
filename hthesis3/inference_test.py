@@ -17,7 +17,7 @@ from tf2_ros import TransformBroadcaster
 import tf2_ros
 from tf_transformations import quaternion_from_euler
 import geometry_msgs.msg
-#import pyrealsense2 as rs2
+import pyrealsense2 as rs2
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
 
 from tf2_geometry_msgs import do_transform_pose
@@ -63,7 +63,7 @@ class ObjectDetectorNode(Node):
         self.visualizer.dataset_meta = self.model.dataset_meta
         self.class_names = ('BS', 'CS', 'DS', 'MPS', 'RS', 'SS', 'TL')
         
-        """self.intrinsics = None
+        self.intrinsics = None
         self.intrinsics = rs2.intrinsics()
         self.intrinsics.width = 1280
         self.intrinsics.height = 720
@@ -72,19 +72,19 @@ class ObjectDetectorNode(Node):
         self.intrinsics.fx = 644.21
         self.intrinsics.fy = 644.21
         self.intrinsics.model = rs2.distortion.brown_conrady
-        self.intrinsics.coeffs = [0, 0, 0, 0, 0] """
+        self.intrinsics.coeffs = [0, 0, 0, 0, 0]
 
         self.image_sub = self.create_subscription(Image, '/camera/color/image_raw', self.image_callback, 10)
         self.depth_sub = self.create_subscription(Image, '/camera/aligned_depth_to_color/image_raw', self.depth_callback, 10)
-        #self.info_sub = self.create_subscription(CameraInfo, '/camera/color/camera_info', self.info_callback, 10)
+        self.info_sub = self.create_subscription(CameraInfo, '/camera/color/camera_info', self.info_callback, 10)
         self.image_pub = self.create_publisher(Image, '/camera/color/image_raw_with_detections', 10)
         
         self.tf_static_broadcaster = StaticTransformBroadcaster(self)
         
         
-        self.transform_buffer = Buffer()
+        #self.transform_buffer = Buffer()
         # Create a transform listener to lookup transforms
-        self.transform_listener = TransformListener(self.transform_buffer, self, spin_thread = True)
+        #self.transform_listener = TransformListener(self.transform_buffer, self, spin_thread = True)
         #self.send_camera_static_tf()
         # ros2 run tf2_ros static_transform_publisher --x -0.05 --y 0.1 --z 0.3 --roll -1.74533 --pitch 0.0 --yaw 0.785398 --frame-id robotinobase3plate_top --child-frame-id camera_link
 
@@ -97,7 +97,7 @@ class ObjectDetectorNode(Node):
     def send_camera_static_tf(self):
         t = geometry_msgs.msg.TransformStamped()
         t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = 'robotinobase3plate_top'
+        t.header.frame_id = 'robotinobase1plate_top'
         t.child_frame_id = 'camera_link'
         t.transform.translation.x = -0.05
         t.transform.translation.y = 0.1
@@ -123,13 +123,13 @@ class ObjectDetectorNode(Node):
         self.intrinsics.coeffs = [0, 0, 0, 0, 0]
 
     def image_callback(self, msg):
-        self.get_logger().info('Received image at time: ' + str(self.current_time))
+        self.get_logger().info('Received image at time: ' + str(msg.header.stamp))
         cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         time = msg.header.stamp
         result = self.detect_objects(cv_image)
         
         if self.depth_image is not None:
-            self.get_logger().info('Received message at time: ' + str(time))
+            #self.get_logger().info('Received message at time: ' + str(time))
             depth_image = self.bridge.imgmsg_to_cv2(self.depth_image, desired_encoding='passthrough')
             self.publish_objects(result, depth_image,time)
     
@@ -229,7 +229,7 @@ class ObjectDetectorNode(Node):
             #u = (x - cx) / fx
             #v = (y - cy) / fy
             
-            coords = [0,0,0]#rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
+            coords = rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
             #rospy.loginfo("class: " + class_names[bbox[5]] + " x: " + str(coords[0]) + " y: " + str(coords[1]) + " z: " + str(coords[2]))
             self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
 

@@ -61,9 +61,8 @@ class TFSniffer(Node):
         return 0
     
     def tf_callback(self, msg):
-        #self.get_logger().info('Got tf message: %s' % msg)
         # Check if the transform is from the MPS frame to some other frame
-        #self.get_logger().info('Got tf message: %s' % msg)
+
         for transform in msg.transforms:
             if  'MPS' in transform.child_frame_id:
                 #transform = self.tf_buffer.lookup_transform('map', 'MPS_0', transform.header.stamp)
@@ -128,7 +127,6 @@ class TFSniffer(Node):
                     yint = 1
                 xhelp = abs(transform.transform.translation.x %  xint)
                 yhelp = abs(transform.transform.translation.y % yint)
-                #self.get_logger().info('Got Line: x: %f , y: %f' % (xhelp,yhelp))
                 if xhelp < 0.15 or xhelp > 0.85 or yhelp < 0.15 or  yhelp > 0.85:
                     return
                     
@@ -142,7 +140,7 @@ class TFSniffer(Node):
                 if (yaw < 0):
                     yaw += 360
                 yaw = self.round_to_nearest(yaw)
-                self.get_logger().info('Got Line: x: %d , y: %d, yaw: %d' % (x,y,yaw))
+                #self.get_logger().info('Got Line: x: %d , y: %d, yaw: %d' % (x,y,yaw))
                 if x > 0 and  x < 8 and y > 0 and y < 9:
                     #todo check if mps already found at position
                     self.orientation_cyan_arr[x][y][yaw] += 1
