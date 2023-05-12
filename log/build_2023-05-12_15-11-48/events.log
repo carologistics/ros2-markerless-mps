@@ -1,0 +1,74 @@
+[0.000000] (-) TimerEvent: {}
+[0.000271] (hthesis3) JobQueued: {'identifier': 'hthesis3', 'dependencies': OrderedDict()}
+[0.000488] (hthesis3) JobStarted: {'identifier': 'hthesis3'}
+[0.099800] (-) TimerEvent: {}
+[0.200056] (-) TimerEvent: {}
+[0.300351] (-) TimerEvent: {}
+[0.400607] (-) TimerEvent: {}
+[0.500870] (-) TimerEvent: {}
+[0.601302] (-) TimerEvent: {}
+[0.701689] (-) TimerEvent: {}
+[0.801940] (-) TimerEvent: {}
+[0.902178] (-) TimerEvent: {}
+[1.002698] (-) TimerEvent: {}
+[1.103118] (-) TimerEvent: {}
+[1.203357] (-) TimerEvent: {}
+[1.303579] (-) TimerEvent: {}
+[1.403784] (-) TimerEvent: {}
+[1.504008] (-) TimerEvent: {}
+[1.604462] (-) TimerEvent: {}
+[1.704682] (-) TimerEvent: {}
+[1.804894] (-) TimerEvent: {}
+[1.905118] (-) TimerEvent: {}
+[2.005311] (-) TimerEvent: {}
+[2.105501] (-) TimerEvent: {}
+[2.205711] (-) TimerEvent: {}
+[2.305943] (-) TimerEvent: {}
+[2.406204] (-) TimerEvent: {}
+[2.436124] (hthesis3) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', 'build/hthesis3', 'build', '--build-base', '/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/build', 'install', '--record', '/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/install.log', '--single-version-externally-managed'], 'cwd': '/home/robotino/ros2_honies_ws/src/hthesis3', 'env': {'SHELL': '/bin/bash', 'ROS_VERSION': '2', 'HISTCONTROL': 'ignoreboth', 'PKG_CONFIG_PATH': '/usr/lib64/ros2/lib/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'HISTSIZE': '10000', 'HOSTNAME': 'robotino-base-1', 'TERMCAP': 'SC|screen.xterm-256color|VT 100/ANSI X3.64 virtual terminal:DO=\\E[%dB:LE=\\E[%dD:RI=\\E[%dC:UP=\\E[%dA:bs:bt=\\E[Z:cd=\\E[J:ce=\\E[K:cl=\\E[H\\E[J:cm=\\E[%i%d;%dH:ct=\\E[3g:do=^J:nd=\\E[C:pt:rc=\\E8:rs=\\Ec:sc=\\E7:st=\\EH:up=\\EM:le=^H:bl=^G:cr=^M:it#8:ho=\\E[H:nw=\\EE:ta=^I:is=\\E)0:li#53:co#238:am:xn:xv:LP:sr=\\EM:al=\\E[L:AL=\\E[%dL:cs=\\E[%i%d;%dr:dl=\\E[M:DL=\\E[%dM:dc=\\E[P:DC=\\E[%dP:im=\\E[4h:ei=\\E[4l:mi:IC=\\E[%d@:ks=\\E[?1h\\E=:ke=\\E[?1l\\E>:vi=\\E[?25l:ve=\\E[34h\\E[?25h:vs=\\E[34l:ti=\\E[?1049h:te=\\E[?1049l:us=\\E[4m:ue=\\E[24m:so=\\E[3m:se=\\E[23m:mb=\\E[5m:md=\\E[1m:mh=\\E[2m:mr=\\E[7m:me=\\E[m:ms:Co#8:pa#64:AF=\\E[3%dm:AB=\\E[4%dm:op=\\E[39;49m:AX:vb=\\Eg:G0:as=\\E(0:ae=\\E(B:ac=\\140\\140aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~..--++,,hhII00:po=\\E[5i:pf=\\E[4i:Km=\\E[<:k0=\\E[10~:k1=\\EOP:k2=\\EOQ:k3=\\EOR:k4=\\EOS:k5=\\E[15~:k6=\\E[17~:k7=\\E[18~:k8=\\E[19~:k9=\\E[20~:k;=\\E[21~:F1=\\E[23~:F2=\\E[24~:kB=\\E[Z:kh=\\E[1~:@1=\\E[1~:kH=\\E[4~:@7=\\E[4~:kN=\\E[6~:kP=\\E[5~:kI=\\E[2~:kD=\\E[3~:ku=\\EOA:kd=\\EOB:kr=\\EOC:kl=\\EOD:km:', 'WINDOW': '4', '__GIT_PROMPT_SHOW_UNTRACKED_FILES': '', 'LMOD_DIR': '/usr/share/lmod/lmod/libexec', 'EDITOR': '/usr/bin/nano', 'PWD': '/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3', 'LOGNAME': 'robotino', 'XDG_SESSION_TYPE': 'tty', 'MODULESHOME': '/usr/share/lmod/lmod', 'MANPATH': '/usr/share/lmod/lmod/share/man:', 'ROS_DOMAIN_ID': '1', 'MOTD_SHOWN': 'pam', '__GIT_PROMPT_IGNORE_SUBMODULES': '0', 'HOME': '/home/robotino', 'LANG': 'en_US.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.m4a=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.oga=01;36:*.opus=01;36:*.spx=01;36:*.xspf=01;36:*~=00;90:*#=00;90:*.bak=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.swp=00;90:*.tmp=00;90:*.dpkg-dist=00;90:*.dpkg-old=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:', '__GIT_PROMPT_IGNORE_STASH': '0', 'LMOD_SETTARG_FULL_SUPPORT': 'no', 'AMENT_PREFIX_PATH': '/home/robotino/ros2_honies_ws/install/tf_transformations:/home/robotino/ros2_honies_ws/install/hthesis3:/home/robotino/nav2_ws/install/navigation_robotino:/home/robotino/nav2_ws/install/nav2_bringup:/usr/lib64/ros2', 'CMAKE_PREFIX_PATH': '/home/robotino/nav2_ws/install/nav2_bringup:/usr/lib64/ros2', 'COLCON_PREFIX_PATH': '/home/robotino/ros2_honies_ws/install:/home/robotino/nav2_ws/install:/usr/lib64/ros2', 'LMOD_VERSION': '8.7.20', 'SSH_CONNECTION': '172.26.108.202 36626 172.26.108.81 22', 'MODULEPATH_ROOT': '/usr/share/modulefiles', 'XDG_SESSION_CLASS': 'user', 'LMOD_PKG': '/usr/share/lmod/lmod', 'PYTHONPATH': '/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/prefix_override:/home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages:/home/robotino/ros2_honies_ws/install/tf_transformations/lib/python3.11/site-packages:/home/robotino/ros2_honies_ws/install/hthesis3/lib/python3.11/site-packages:/home/robotino/nav2_ws/install/navigation_robotino/lib/python3.11/site-packages:/usr/lib64/ros2/lib/python3.11/site-packages', 'COLCON': '1', 'TERM': 'screen.xterm-256color', 'LESSOPEN': '||/usr/bin/lesspipe.sh %s', 'USER': 'robotino', 'LMOD_ROOT': '/usr/share/lmod', 'SHLVL': '2', 'BASH_ENV': '/usr/share/lmod/lmod/init/bash', 'LMOD_sys': 'Linux', 'XDG_SESSION_ID': '3', 'LD_LIBRARY_PATH': '/usr/lib64/ros2/opt/rviz_ogre_vendor/lib:/usr/lib64/ros2/lib64:/usr/lib64/ros2/lib', '__GIT_PROMPT_SHOW_TRACKING': '1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'ROS_LOCALHOST_ONLY': '0', '__GIT_PROMPT_SHOW_UPSTREAM': '0', 'SSH_CLIENT': '172.26.108.202 36626 22', 'DEBUGINFOD_URLS': 'https://debuginfod.fedoraproject.org/', '__GIT_PROMPT_SHOW_CHANGED_FILES_COUNT': '1', 'XDG_DATA_DIRS': '/home/robotino/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share', 'PATH': '/usr/lib64/ros2/bin:/home/robotino/.local/bin:/home/robotino/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/robotino/.npm/bin:/home/robotino/.npm/bin', 'STY': '1741.fawkes', 'MODULEPATH': '/etc/modulefiles:/usr/share/modulefiles:/usr/share/modulefiles/Linux:/usr/share/modulefiles/Core:/usr/share/lmod/lmod/modulefiles/Core', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'LMOD_CMD': '/usr/share/lmod/lmod/libexec/lmod', 'MAIL': '/var/spool/mail/robotino', 'SSH_TTY': '/dev/pts/0', 'GIT_BRANCH': 'main', 'ROS_DISTRO': 'humble', 'OLDPWD': '/home/robotino/ros2_honies_ws', '__GIT_PROMPT_WITH_USERNAME_AND_REPO': '0\nBASH_FUNC_ml%%=() {  eval "$($LMOD_DIR/ml_cmd "$@")"\n}\nBASH_FUNC_module%%=() {  if [ -z "${LMOD_SH_DBG_ON+x}" ]; then\n case "$-" in\n *v*x*)\n __lmod_sh_dbg=\'vx\'\n ;;\n *v*)\n __lmod_sh_dbg=\'v\'\n ;;\n *x*)\n __lmod_sh_dbg=\'x\'\n ;;\n esac;\n fi;\n if [ -n "${__lmod_sh_dbg:-}" ]; then\n set +$__lmod_sh_dbg;\n echo "Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod\'s output" 1>&2;\n fi;\n eval "$($LMOD_CMD shell "$@")" && eval "$(${LMOD_SETTARG_CMD:-:} -s sh)";\n __lmod_my_status=$?;\n if [ -n "${__lmod_sh_dbg:-}" ]; then\n echo "Shell debugging restarted" 1>&2;\n set -$__lmod_sh_dbg;\n fi;\n unset __lmod_sh_dbg;\n return $__lmod_my_status\n}', '_': '/usr/bin/env'}, 'shell': False}
+[2.506293] (-) TimerEvent: {}
+[2.606524] (-) TimerEvent: {}
+[2.706734] (-) TimerEvent: {}
+[2.807009] (-) TimerEvent: {}
+[2.907404] (-) TimerEvent: {}
+[3.007611] (-) TimerEvent: {}
+[3.107836] (-) TimerEvent: {}
+[3.208046] (-) TimerEvent: {}
+[3.308255] (-) TimerEvent: {}
+[3.408499] (-) TimerEvent: {}
+[3.508717] (-) TimerEvent: {}
+[3.586360] (hthesis3) StdoutLine: {'line': b'running egg_info\n'}
+[3.608798] (-) TimerEvent: {}
+[3.659830] (hthesis3) StdoutLine: {'line': b'writing build/hthesis3/hthesis3.egg-info/PKG-INFO\n'}
+[3.708883] (-) TimerEvent: {}
+[3.716492] (hthesis3) StdoutLine: {'line': b'writing dependency_links to build/hthesis3/hthesis3.egg-info/dependency_links.txt\n'}
+[3.808970] (-) TimerEvent: {}
+[3.882109] (hthesis3) StdoutLine: {'line': b'writing entry points to build/hthesis3/hthesis3.egg-info/entry_points.txt\n'}
+[3.909061] (-) TimerEvent: {}
+[3.994458] (hthesis3) StdoutLine: {'line': b'writing requirements to build/hthesis3/hthesis3.egg-info/requires.txt\n'}
+[4.009165] (-) TimerEvent: {}
+[4.058629] (hthesis3) StdoutLine: {'line': b'writing top-level names to build/hthesis3/hthesis3.egg-info/top_level.txt\n'}
+[4.109247] (-) TimerEvent: {}
+[4.169083] (hthesis3) StdoutLine: {'line': b"reading manifest file 'build/hthesis3/hthesis3.egg-info/SOURCES.txt'\n"}
+[4.170289] (hthesis3) StdoutLine: {'line': b"writing manifest file 'build/hthesis3/hthesis3.egg-info/SOURCES.txt'\n"}
+[4.170527] (hthesis3) StdoutLine: {'line': b'running build\n'}
+[4.170646] (hthesis3) StdoutLine: {'line': b'running build_py\n'}
+[4.170900] (hthesis3) StdoutLine: {'line': b'running install\n'}
+[4.171114] (hthesis3) StderrLine: {'line': b'/usr/lib/python3.11/site-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.\n'}
+[4.171206] (hthesis3) StderrLine: {'line': b'  warnings.warn(\n'}
+[4.181469] (hthesis3) StdoutLine: {'line': b'running install_lib\n'}
+[4.209339] (-) TimerEvent: {}
+[4.273943] (hthesis3) StdoutLine: {'line': b'running install_data\n'}
+[4.298949] (hthesis3) StdoutLine: {'line': b'running install_egg_info\n'}
+[4.309447] (-) TimerEvent: {}
+[4.372005] (hthesis3) StdoutLine: {'line': b"removing '/home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages/hthesis3-0.0.0-py3.11.egg-info' (and everything under it)\n"}
+[4.372397] (hthesis3) StdoutLine: {'line': b'Copying build/hthesis3/hthesis3.egg-info to /home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages/hthesis3-0.0.0-py3.11.egg-info\n'}
+[4.373259] (hthesis3) StdoutLine: {'line': b'running install_scripts\n'}
+[4.409598] (-) TimerEvent: {}
+[4.510069] (-) TimerEvent: {}
+[4.530847] (hthesis3) StdoutLine: {'line': b'Installing inference_test script to /home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/hthesis3\n'}
+[4.531081] (hthesis3) StdoutLine: {'line': b'Installing tf_sniffer script to /home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/hthesis3\n'}
+[4.531410] (hthesis3) StdoutLine: {'line': b"writing list of installed files to '/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/install.log'\n"}
+[4.579666] (hthesis3) CommandEnded: {'returncode': 0}
+[4.592212] (hthesis3) JobEnded: {'identifier': 'hthesis3', 'rc': 0}
+[4.593396] (-) EventReactorShutdown: {}

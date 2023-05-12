@@ -63,6 +63,7 @@ class TFSniffer(Node):
     def tf_callback(self, msg):
         #self.get_logger().info('Got tf message: %s' % msg)
         # Check if the transform is from the MPS frame to some other frame
+        #self.get_logger().info('Got tf message: %s' % msg)
         for transform in msg.transforms:
             if  'MPS' in transform.child_frame_id:
                 #transform = self.tf_buffer.lookup_transform('map', 'MPS_0', transform.header.stamp)

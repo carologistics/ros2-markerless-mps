@@ -17,7 +17,7 @@ from tf2_ros import TransformBroadcaster
 import tf2_ros
 from tf_transformations import quaternion_from_euler
 import geometry_msgs.msg
-import pyrealsense2 as rs2
+#import pyrealsense2 as rs2
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
 
 from tf2_geometry_msgs import do_transform_pose
@@ -26,7 +26,7 @@ from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 from geometry_msgs.msg import TransformStamped
 
-from rclpy.clock import Clock
+
 from builtin_interfaces.msg import Time
 
 from rosgraph_msgs.msg import Clock as ClockMsg
@@ -43,9 +43,9 @@ class ObjectDetectorNode(Node):
     def __init__(self):
         super().__init__('object_detector_node')
 
-        model_config = '/home/daniel/thesis/mmyolo/configs/rtmdet/rtmdet_tiny_fast_1xb12-40e_cat.py'
-        model_file = '/home/daniel/thesis/mmyolo/work_dirs/rtmdet_tiny_fast_1xb12-40e_cat/best_coco_bbox_mAP_epoch_40.pth'
-        self.model = init_detector(model_config, model_file, device='cuda:0')
+        model_config = '/home/robotino/mmyolo/configs/rtmdet/rtmdet_tiny_fast_1xb12-40e_cat_1.py'
+        model_file = '/home/robotino/ros2_honies_ws/src/hthesis3/model/best_coco_bbox_mAP_epoch_40.pth'
+        self.model = init_detector(model_config, model_file, device='cpu')
         self.bridge = CvBridge()
         self.depth_image = None
 
@@ -62,7 +62,8 @@ class ObjectDetectorNode(Node):
         # then pass to the model in init_detector
         self.visualizer.dataset_meta = self.model.dataset_meta
         self.class_names = ('BS', 'CS', 'DS', 'MPS', 'RS', 'SS', 'TL')
-        self.intrinsics = None
+        
+        """self.intrinsics = None
         self.intrinsics = rs2.intrinsics()
         self.intrinsics.width = 1280
         self.intrinsics.height = 720
@@ -71,11 +72,13 @@ class ObjectDetectorNode(Node):
         self.intrinsics.fx = 644.21
         self.intrinsics.fy = 644.21
         self.intrinsics.model = rs2.distortion.brown_conrady
-        self.intrinsics.coeffs = [0, 0, 0, 0, 0]
+        self.intrinsics.coeffs = [0, 0, 0, 0, 0] """
 
         self.image_sub = self.create_subscription(Image, '/camera/color/image_raw', self.image_callback, 10)
         self.depth_sub = self.create_subscription(Image, '/camera/aligned_depth_to_color/image_raw', self.depth_callback, 10)
-        self.info_sub = self.create_subscription(CameraInfo, '/camera/color/camera_info', self.info_callback, 10)
+        #self.info_sub = self.create_subscription(CameraInfo, '/camera/color/camera_info', self.info_callback, 10)
+        self.image_pub = self.create_publisher(Image, '/camera/color/image_raw_with_detections', 10)
+        
         self.tf_static_broadcaster = StaticTransformBroadcaster(self)
         
         
@@ -87,17 +90,9 @@ class ObjectDetectorNode(Node):
 
         
         self.current_time = Time()
-        self.create_subscription(
-            ClockMsg,
-            '/clock',
-            self.set_clock,
-            qos_profile=qos_profile)
+       
 
-    def set_clock(self, msg):
-        self.current_time = msg.clock
-
-        #self.get_logger().info('Received message at time: ' )
-
+        self.get_logger().info('Object detector node has been started')
 
     def send_camera_static_tf(self):
         t = geometry_msgs.msg.TransformStamped()
@@ -128,6 +123,7 @@ class ObjectDetectorNode(Node):
         self.intrinsics.coeffs = [0, 0, 0, 0, 0]
 
     def image_callback(self, msg):
+        self.get_logger().info('Received image at time: ' + str(self.current_time))
         cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         time = msg.header.stamp
         result = self.detect_objects(cv_image)
@@ -168,8 +164,11 @@ class ObjectDetectorNode(Node):
             show=False,
             pred_score_thr=score_thr) 
         img = self.visualizer.get_image()
-        cv2.namedWindow('video', 0)
-        mmcv.imshow(img, 'video', 1)
+        #cv2.namedWindow('video', 0)
+        #mmcv.imshow(img, 'video', 1)
+        
+        # publish image with detections
+        self.image_pub.publish(self.bridge.cv2_to_imgmsg(img, encoding='bgr8'))
         return bboxes
     
     # Define a function to publish a tf transform
@@ -230,9 +229,9 @@ class ObjectDetectorNode(Node):
             #u = (x - cx) / fx
             #v = (y - cy) / fy
             
-            coords = rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
+            coords = [0,0,0]#rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
             #rospy.loginfo("class: " + class_names[bbox[5]] + " x: " + str(coords[0]) + " y: " + str(coords[1]) + " z: " + str(coords[2]))
-            #self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
+            self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
 
             translation = [coords[0], coords[1], coords[2]]
             rotation = [0, 0, 0, 1] # you can set a rotation if you want

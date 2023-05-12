@@ -1,0 +1,80 @@
+[1.958s] Invoking command in '/home/robotino/ros2_honies_ws/src/hthesis3': DEBUGINFOD_URLS=https://debuginfod.fedoraproject.org/ PYTHONPATH=/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/prefix_override:/home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages:${PYTHONPATH} _=/usr/bin/env __GIT_PROMPT_WITH_USERNAME_AND_REPO=${__GIT_PROMPT_WITH_USERNAME_AND_REPO}
+BASH_FUNC_ml%%=() {  eval "$($LMOD_DIR/ml_cmd "$@")"
+}
+BASH_FUNC_module%%=() {  if [ -z "${LMOD_SH_DBG_ON+x}" ]; then
+ case "$-" in
+ *v*x*)
+ __lmod_sh_dbg='vx'
+ ;;
+ *v*)
+ __lmod_sh_dbg='v'
+ ;;
+ *x*)
+ __lmod_sh_dbg='x'
+ ;;
+ esac;
+ fi;
+ if [ -n "${__lmod_sh_dbg:-}" ]; then
+ set +$__lmod_sh_dbg;
+ echo "Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output" 1>&2;
+ fi;
+ eval "$($LMOD_CMD shell "$@")" && eval "$(${LMOD_SETTARG_CMD:-:} -s sh)";
+ __lmod_my_status=$?;
+ if [ -n "${__lmod_sh_dbg:-}" ]; then
+ echo "Shell debugging restarted" 1>&2;
+ set -$__lmod_sh_dbg;
+ fi;
+ unset __lmod_sh_dbg;
+ return $__lmod_my_status
+} /usr/bin/python3 setup.py egg_info --egg-base build/hthesis3 build --build-base /home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/build install --record /home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/install.log --single-version-externally-managed
+[2.955s] running egg_info
+[3.025s] writing build/hthesis3/hthesis3.egg-info/PKG-INFO
+[3.077s] writing dependency_links to build/hthesis3/hthesis3.egg-info/dependency_links.txt
+[3.234s] writing entry points to build/hthesis3/hthesis3.egg-info/entry_points.txt
+[3.337s] writing requirements to build/hthesis3/hthesis3.egg-info/requires.txt
+[3.388s] writing top-level names to build/hthesis3/hthesis3.egg-info/top_level.txt
+[3.477s] reading manifest file 'build/hthesis3/hthesis3.egg-info/SOURCES.txt'
+[3.478s] writing manifest file 'build/hthesis3/hthesis3.egg-info/SOURCES.txt'
+[3.478s] running build
+[3.478s] running build_py
+[3.479s] running install
+[3.479s] /usr/lib/python3.11/site-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[3.479s]   warnings.warn(
+[3.485s] running install_lib
+[3.555s] running install_data
+[3.573s] running install_egg_info
+[3.643s] removing '/home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages/hthesis3-0.0.0-py3.11.egg-info' (and everything under it)
+[3.643s] Copying build/hthesis3/hthesis3.egg-info to /home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages/hthesis3-0.0.0-py3.11.egg-info
+[3.644s] running install_scripts
+[3.793s] Installing inference_test script to /home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/hthesis3
+[3.793s] Installing tf_sniffer script to /home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/hthesis3
+[3.793s] writing list of installed files to '/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/install.log'
+[3.840s] Invoked command in '/home/robotino/ros2_honies_ws/src/hthesis3' returned '0': DEBUGINFOD_URLS=https://debuginfod.fedoraproject.org/ PYTHONPATH=/home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/prefix_override:/home/robotino/ros2_honies_ws/src/hthesis3/install/hthesis3/lib/python3.11/site-packages:${PYTHONPATH} _=/usr/bin/env __GIT_PROMPT_WITH_USERNAME_AND_REPO=${__GIT_PROMPT_WITH_USERNAME_AND_REPO}
+BASH_FUNC_ml%%=() {  eval "$($LMOD_DIR/ml_cmd "$@")"
+}
+BASH_FUNC_module%%=() {  if [ -z "${LMOD_SH_DBG_ON+x}" ]; then
+ case "$-" in
+ *v*x*)
+ __lmod_sh_dbg='vx'
+ ;;
+ *v*)
+ __lmod_sh_dbg='v'
+ ;;
+ *x*)
+ __lmod_sh_dbg='x'
+ ;;
+ esac;
+ fi;
+ if [ -n "${__lmod_sh_dbg:-}" ]; then
+ set +$__lmod_sh_dbg;
+ echo "Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output" 1>&2;
+ fi;
+ eval "$($LMOD_CMD shell "$@")" && eval "$(${LMOD_SETTARG_CMD:-:} -s sh)";
+ __lmod_my_status=$?;
+ if [ -n "${__lmod_sh_dbg:-}" ]; then
+ echo "Shell debugging restarted" 1>&2;
+ set -$__lmod_sh_dbg;
+ fi;
+ unset __lmod_sh_dbg;
+ return $__lmod_my_status
+} /usr/bin/python3 setup.py egg_info --egg-base build/hthesis3 build --build-base /home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/build install --record /home/robotino/ros2_honies_ws/src/hthesis3/build/hthesis3/install.log --single-version-externally-managed
