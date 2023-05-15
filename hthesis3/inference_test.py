@@ -137,14 +137,13 @@ class ObjectDetectorNode(Node):
         self.depth_image = msg
     
     def detect_objects(self, cv_image):
-        # Run inference on the
         # Run inference on the image
         result = inference_detector(self.model, cv_image)
         #rospy.loginfo(result)
         # Extract bounding boxes from the result
         # Get candidate predict info with score threshold
         # Show the results
-        img = mmcv.imread(cv_image)
+        #img = mmcv.imread(cv_image)
         #img = mmcv.imconvert(cv_image, 'bgr', 'rgb')
         bboxes = []
         score_thr = 0.65
@@ -156,19 +155,17 @@ class ObjectDetectorNode(Node):
                 bboxes.append(bboxn)
 
 
-        self.visualizer.add_datasample(
+        """ self.visualizer.add_datasample(
             'result',
             image=img,
             data_sample=result,
             draw_gt=False,
             show=False,
             pred_score_thr=score_thr) 
-        img = self.visualizer.get_image()
-        #cv2.namedWindow('video', 0)
-        #mmcv.imshow(img, 'video', 1)
+        img = self.visualizer.get_image() """
         
         # publish image with detections
-        self.image_pub.publish(self.bridge.cv2_to_imgmsg(img, encoding='bgr8'))
+        #self.image_pub.publish(self.bridge.cv2_to_imgmsg(img, encoding='bgr8'))
         return bboxes
     
     # Define a function to publish a tf transform
