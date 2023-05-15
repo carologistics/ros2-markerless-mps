@@ -21,15 +21,15 @@ def generate_launch_description():
             description='The z-axis value of the static transform.'),
         DeclareLaunchArgument(
             'roll',
-            default_value='0.0',
+            default_value='-1.0472',
             description='The roll angle of the static transform.'),
         DeclareLaunchArgument(
             'pitch',
-            default_value='1.74533',
+            default_value='0.0',
             description='The pitch angle of the static transform.'),
         DeclareLaunchArgument(
             'yaw',
-            default_value='-0.5',
+            default_value='-1.74533',
             description='The yaw angle of the static transform.'),
         DeclareLaunchArgument(
             'frame_id',

@@ -123,7 +123,7 @@ class ObjectDetectorNode(Node):
         self.intrinsics.coeffs = [0, 0, 0, 0, 0]
 
     def image_callback(self, msg):
-        self.get_logger().info('Received image at time: ' + str(msg.header.stamp))
+        #self.get_logger().info('Received image at time: ' + str(msg.header.stamp))
         cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         time = msg.header.stamp
         result = self.detect_objects(cv_image)
@@ -232,8 +232,11 @@ class ObjectDetectorNode(Node):
             coords = rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
             #rospy.loginfo("class: " + class_names[bbox[5]] + " x: " + str(coords[0]) + " y: " + str(coords[1]) + " z: " + str(coords[2]))
             self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
-
+            if(coords[2] < 0.1):
+                self.get_logger().info("Object too close, ignoring")
+                continue
             translation = [coords[0], coords[1], coords[2]]
+            
             rotation = [0, 0, 0, 1] # you can set a rotation if you want
 
             # Publish the object as a tf transform

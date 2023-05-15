@@ -32,6 +32,9 @@ class TFSniffer(Node):
 
         self.classes_magenta_arr = [[[0 for k in range(5)] for j in range(9)] for i in range(8)]
         self.classes_type_cyan_arr = [[[0 for k in range(5)] for j in range(9)] for i in range(8)]
+        
+        self.tl_magenta_arr = [[[0.0 for k in range(3)] for j in range(9)] for i in range(8)]
+        self.tl_cyan_arr = [[[0.0 for k in range(3)] for j in range(9)] for i in range(8)]
 
         self.classes = ['SS', 'RS', 'CS', 'DS', 'BS']
         self.orientation = ['  0', ' 45', ' 90', '135']
@@ -50,6 +53,51 @@ class TFSniffer(Node):
         y = int(transform.transform.translation.y) + 1
         return x, y
 
+    def get_real_rotation_magenta(self, x, y, cls, rot):
+        if(self.tl_magenta_arr[x][y][0] > 0):
+            xoff = self.tl_magenta_arr[x][y][1] / self.tl_magenta_arr[x][y][0]
+            yoff = self.tl_magenta_arr[x][y][2] / self.tl_magenta_arr[x][y][0]
+            if rot == 0:
+                if yoff < 0.5:
+                    return '180'
+                return '  0'
+            if rot == 2:
+                if xoff < 0.5:
+                    return '270'
+                return ' 90'
+            if rot == 1:
+                if (xoff + yoff) > 1.0 :
+                    return ' 45'
+                return '225'
+            if rot == 3:
+                if xoff > yoff:
+                    return '315'
+                return '135'
+        return self.orientation[rot]
+    
+    def get_real_rotation_cyan(self, x, y, cls, rot):
+        if(self.tl_magenta_arr[x][y][0] > 0):
+            xoff = self.tl_cyan_arr[x][y][1] / self.tl_cyan_arr[x][y][0]
+            yoff = self.tl_cyan_arr[x][y][2] / self.tl_cyan_arr[x][y][0]
+            if rot == 0:
+                if yoff < 0.5:
+                    return '180'
+                return '  0'
+            if rot == 2:
+                if xoff > 0.5:
+                    return '270'
+                return ' 90'
+            if rot == 1:
+                if (xoff + yoff) > 1.0 :
+                    return '315'
+                return '135'
+            if rot == 3:
+                if xoff < yoff:
+                    return ' 45'
+                return '225'
+        return self.orientation[rot]
+
+        
     def round_to_nearest(self, degrees):
         degrees = degrees % 180
         steps = [0, 45, 90, 135, 180]
@@ -68,16 +116,41 @@ class TFSniffer(Node):
                 #transform = self.tf_buffer.lookup_transform('map', 'MPS_0', transform.header.stamp)
                 try:
                     transform = self.tf_buffer.lookup_transform(
-                        'map', transform.child_frame_id, transform.header.stamp)
+                        'map', transform.child_frame_id, rclpy.time.Time())
                 except Exception as e:
                     self.get_logger().error('Failed to lookup transform: %s' % str(e))
-                    return
+                    continue
                 x, y = self.get_position_in_rcll(transform)
                 self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
                 if x > 0 and  x < 8 and y > 0 and y < 9:
                     self.mps_cyan_arr[x][y] += 1
                 elif x < 0 and x > -8 and y > 0 and y < 9:
                     self.mps_magenta_arr[x*-1][y] += 1
+            
+            #check if tl is in the child frame
+            if 'TL' in transform.child_frame_id:
+                try:
+                    transform = self.tf_buffer.lookup_transform(
+                        'map', transform.child_frame_id, rclpy.time.Time())
+                except Exception as e:
+                    self.get_logger().error('Failed to lookup transform: %s' % str(e))
+                    continue
+                x, y = self.get_position_in_rcll(transform)
+                xoff = abs(transform.transform.translation.x % 1.0)
+                yoff = abs(transform.transform.translation.y % 1.0)
+                if x > 0 and  x < 8 and y > 0 and y < 9:
+                    self.tl_cyan_arr[x][y][0] += 1.0
+                    self.tl_cyan_arr[x][y][1] += xoff
+                    self.tl_cyan_arr[x][y][2] += yoff
+                    #self.tl_cyan_arr[x][y][1] /= self.tl_cyan_arr[x][y][0]
+                    #self.tl_cyan_arr[x][y][2] /= self.tl_cyan_arr[x][y][0]
+                elif x < 0 and x > -8 and y > 0 and y < 9:
+                    self.tl_magenta_arr[x*-1][y][0] += 1.0
+                    self.tl_magenta_arr[x*-1][y][1] += xoff
+                    self.tl_magenta_arr[x*-1][y][2] += yoff
+                    #self.tl_magenta_arr[x*-1][y][1] /= self.tl_magenta_arr[x*-1][y][0]
+                    #self.tl_magenta_arr[x*-1][y][2] /= self.tl_magenta_arr[x*-1][y][0]
+                self.get_logger().info('Got TL transform: x: %d , y: %d, xoff: %f, yoff: %f' % (x,y,xoff,yoff))
             # check if one of the classes is in the child frame id
             for i in range(len(self.classes)):
                 if self.classes[i] in transform.child_frame_id:
@@ -86,7 +159,7 @@ class TFSniffer(Node):
                             'map', transform.child_frame_id, transform.header.stamp)
                     except Exception as e:
                         self.get_logger().error('Failed to lookup transform: %s' % str(e))
-                        return #TODO: check if this is correct
+                        continue #TODO: check if this is correct
                     x, y = self.get_position_in_rcll(transform)
                     self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
                     if x > 0 and  x < 8 and y > 0 and y < 9:
@@ -111,7 +184,7 @@ class TFSniffer(Node):
                             'map', transform.child_frame_id[:-1] + '1', rclpy.time.Time())
                 except Exception as e:
                     self.get_logger().error('Failed to lookup transform: %s' % str(e))
-                    return
+                    continue
                 #if(int(transform.transform.translation.x) != int(transform2.transform.translation.x) or int(transform.transform.translation.y) != int(transform2.transform.translation.y)):
                 #    return
                 
@@ -128,7 +201,7 @@ class TFSniffer(Node):
                 xhelp = abs(transform.transform.translation.x %  xint)
                 yhelp = abs(transform.transform.translation.y % yint)
                 if xhelp < 0.15 or xhelp > 0.85 or yhelp < 0.15 or  yhelp > 0.85:
-                    return
+                    continue
                     
                 x, y = self.get_position_in_rcll(transform)
                 quaternion = (
@@ -156,7 +229,7 @@ class TFSniffer(Node):
                     self.get_logger().info('Magenta MPS %d %d: %d' % (x,y,self.mps_magenta_arr[x][y]))
         for x in range(1,8):
             for y in range(1,9):
-                if self.mps_magenta_arr[x][y] > 0:
+                if self.mps_cyan_arr[x][y] > 0:
                     self.get_logger().info('Cyan MPS %d %d: %d' % (x,y,self.mps_cyan_arr[x][y]))
         """  # print out arrays in table for class 
 
@@ -245,7 +318,8 @@ class TFSniffer(Node):
                         max_value = self.orientation_magenta_arr[8-x][9-y][i]
                         orientation = i
                 if max_value > 5:
-                    output += self.orientation[orientation] + '|'
+                    real_orientation = self.get_real_rotation_magenta(8-x, 9-y, 'CS', orientation)
+                    output += real_orientation + '|'
                 else:
                     output += '   |'
             for x in range(1,8):
@@ -256,12 +330,13 @@ class TFSniffer(Node):
                         max_value = self.orientation_cyan_arr[x][9-y][i]
                         orientation = i
                 if max_value > 5:
-                    output += self.orientation[orientation] + '|'
+                    real_orientation = self.get_real_rotation_cyan(x, 9-y, 'CS', orientation)
+                    output += real_orientation + '|'
                 else:
                     output += '   |'
             self.get_logger().info(output)
             self.get_logger().info('   --- --- --- --- --- --- --- --- --- --- --- --- --- --- ')
-
+        self.get_logger().info(self.tl_magenta_arr)
         self.get_logger().info('Node is shutting down...')
 
             

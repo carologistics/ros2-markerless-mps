@@ -1,4 +1,6 @@
 from setuptools import setup
+from glob import glob
+import os
 
 package_name = 'hthesis3'
 
@@ -11,7 +13,8 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (f'lib/{package_name}', ["hthesis3/pyrealsense2.cpython-311-x86_64-linux-gnu.so"]),
-        (f'lib/{package_name}', ["hthesis3/librealsense2.so"])
+        (f'lib/{package_name}', ["hthesis3/librealsense2.so"]),
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
