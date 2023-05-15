@@ -76,7 +76,7 @@ class TFSniffer(Node):
         return self.orientation[rot]
     
     def get_real_rotation_cyan(self, x, y, cls, rot):
-        if(self.tl_magenta_arr[x][y][0] > 0):
+        if(self.tl_cyan_arr[x][y][0] > 0):
             xoff = self.tl_cyan_arr[x][y][1] / self.tl_cyan_arr[x][y][0]
             yoff = self.tl_cyan_arr[x][y][2] / self.tl_cyan_arr[x][y][0]
             if rot == 0:
