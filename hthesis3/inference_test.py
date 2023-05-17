@@ -165,7 +165,7 @@ class ObjectDetectorNode(Node):
         img = self.visualizer.get_image() """
         
         # publish image with detections
-        #self.image_pub.publish(self.bridge.cv2_to_imgmsg(img, encoding='bgr8'))
+        self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, encoding='bgr8'))
         return bboxes
     
     # Define a function to publish a tf transform
@@ -210,18 +210,26 @@ class ObjectDetectorNode(Node):
 
             #EXPERIMENTAL
             #if class is MPS
-            if bbox[5] == 3:
-                depth_roi = depth_roi + 0.15
-
-            depth = np.median(depth_roi)
+            #if bbox[5] == 3:
+            #    depth_roi = depth_roi + 0.15
+            #filter all zeros from depth np array
+            depth_roi = np.where(depth_roi == 0, np.nan, depth_roi)
+            depth = np.nanmedian(depth_roi)
+            #depth = np.nanmean(depth_roi)
             if np.isnan(depth):
                 continue # ignore NaN depth values
+            
             
             # fx, fy, cx, cy = self.get_camera_intrinsics() # get camera intrinsics
             x = int((xmin + xmax) / 2)
             y = int((ymin + ymax) / 2)
             
             z = depth
+            # if class is not tl
+            #if bbox[5] != 6:
+            z = depth + 150
+            
+            
             #rospy.loginfo("x: " + str(x) + " y: " + str(y) + " z: " + str(z))
             #u = (x - cx) / fx
             #v = (y - cy) / fy

@@ -136,8 +136,8 @@ class TFSniffer(Node):
                     self.get_logger().error('Failed to lookup transform: %s' % str(e))
                     continue
                 x, y = self.get_position_in_rcll(transform)
-                xoff = abs(transform.transform.translation.x % 1.0)
-                yoff = abs(transform.transform.translation.y % 1.0)
+                xoff = abs(transform.transform.translation.x) % 1.0
+                yoff = abs(transform.transform.translation.y) % 1.0
                 if x > 0 and  x < 8 and y > 0 and y < 9:
                     self.tl_cyan_arr[x][y][0] += 1.0
                     self.tl_cyan_arr[x][y][1] += xoff
