@@ -236,7 +236,7 @@ class ObjectDetectorNode(Node):
             
             coords = rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
             #rospy.loginfo("class: " + class_names[bbox[5]] + " x: " + str(coords[0]) + " y: " + str(coords[1]) + " z: " + str(coords[2]))
-            self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
+            #self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
             if(coords[2] < 0.1):
                 self.get_logger().info("Object too close, ignoring")
                 continue

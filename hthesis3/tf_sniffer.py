@@ -21,6 +21,7 @@ class TFSniffer(Node):
     def __init__(self):
         super().__init__('tf_sniffer')
 
+        self.min_count = 3
         self.tf_buffer = tf2_ros.Buffer(rclpy.duration.Duration(seconds=10.0))
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
@@ -35,14 +36,21 @@ class TFSniffer(Node):
         
         self.tl_magenta_arr = [[[0.0 for k in range(3)] for j in range(9)] for i in range(8)]
         self.tl_cyan_arr = [[[0.0 for k in range(3)] for j in range(9)] for i in range(8)]
+        
+        self.output_magenta = [[['   ' for k in range(2)]  for k in range(9)] for i in range(8)]
+        self.output_cyan = [[['   ' for k in range(2)]  for k in range(9)] for i in range(8)]
 
         self.classes = ['SS', 'RS', 'CS', 'DS', 'BS']
+        self.classes3 = [' SS', ' RS', ' CS', ' DS', ' BS']
         self.orientation = ['  0', ' 45', ' 90', '135']
         self.create_subscription(
             TFMessage,
             '/tf',
             self.tf_callback,
             10)
+        #call ros timer every 5 seconds
+        backgroud_task_period = 5.0
+        check_task = self.create_timer(backgroud_task_period, self.timer_callback)
 
     def get_position_in_rcll(self, transform):
         x, y = 0, 0
@@ -50,52 +58,71 @@ class TFSniffer(Node):
             x = int(transform.transform.translation.x) + 1
         else:
             x = int(transform.transform.translation.x) - 1
-        y = int(transform.transform.translation.y) + 1
+        if transform.transform.translation.y > 0:
+            y = int(transform.transform.translation.y) + 1
         return x, y
 
     def get_real_rotation_magenta(self, x, y, cls, rot):
-        if(self.tl_magenta_arr[x][y][0] > 0):
+        
+        if(self.tl_magenta_arr[x][y][0] > self.min_count):
             xoff = self.tl_magenta_arr[x][y][1] / self.tl_magenta_arr[x][y][0]
             yoff = self.tl_magenta_arr[x][y][2] / self.tl_magenta_arr[x][y][0]
             if rot == 0:
                 if yoff < 0.5:
+                    if cls == ' SS':
+                        return '  0'
                     return '180'
                 return '  0'
             if rot == 2:
                 if xoff < 0.5:
+                    if cls == ' SS':
+                        return ' 90'
                     return '270'
                 return ' 90'
             if rot == 1:
                 if (xoff + yoff) > 1.0 :
+                    if cls == ' SS':
+                        return '225'
                     return ' 45'
                 return '225'
             if rot == 3:
                 if xoff > yoff:
+                    if cls == ' SS':
+                        return '135'
                     return '315'
                 return '135'
-        return self.orientation[rot]
+        return '   '
     
     def get_real_rotation_cyan(self, x, y, cls, rot):
-        if(self.tl_cyan_arr[x][y][0] > 0):
+       
+        if(self.tl_cyan_arr[x][y][0] > self.min_count):
             xoff = self.tl_cyan_arr[x][y][1] / self.tl_cyan_arr[x][y][0]
             yoff = self.tl_cyan_arr[x][y][2] / self.tl_cyan_arr[x][y][0]
             if rot == 0:
                 if yoff < 0.5:
+                    if cls == ' SS':
+                        return '  0'
                     return '180'
                 return '  0'
             if rot == 2:
                 if xoff > 0.5:
+                    if cls == ' SS':
+                        return ' 90'
                     return '270'
                 return ' 90'
             if rot == 1:
                 if (xoff + yoff) > 1.0 :
+                    if cls == ' SS':
+                        return '135'
                     return '315'
                 return '135'
             if rot == 3:
                 if xoff < yoff:
+                    if cls == ' SS':
+                        return '225'
                     return ' 45'
                 return '225'
-        return self.orientation[rot]
+        return '   '
 
         
     def round_to_nearest(self, degrees):
@@ -121,7 +148,7 @@ class TFSniffer(Node):
                     self.get_logger().error('Failed to lookup transform: %s' % str(e))
                     continue
                 x, y = self.get_position_in_rcll(transform)
-                self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
+                #self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
                 if x > 0 and  x < 8 and y > 0 and y < 9:
                     self.mps_cyan_arr[x][y] += 1
                 elif x < 0 and x > -8 and y > 0 and y < 9:
@@ -150,7 +177,7 @@ class TFSniffer(Node):
                     self.tl_magenta_arr[x*-1][y][2] += yoff
                     #self.tl_magenta_arr[x*-1][y][1] /= self.tl_magenta_arr[x*-1][y][0]
                     #self.tl_magenta_arr[x*-1][y][2] /= self.tl_magenta_arr[x*-1][y][0]
-                self.get_logger().info('Got TL transform: x: %d , y: %d, xoff: %f, yoff: %f' % (x,y,xoff,yoff))
+                #self.get_logger().info('Got TL transform: x: %d , y: %d, xoff: %f, yoff: %f' % (x,y,xoff,yoff))
             # check if one of the classes is in the child frame id
             for i in range(len(self.classes)):
                 if self.classes[i] in transform.child_frame_id:
@@ -161,7 +188,7 @@ class TFSniffer(Node):
                         self.get_logger().error('Failed to lookup transform: %s' % str(e))
                         continue #TODO: check if this is correct
                     x, y = self.get_position_in_rcll(transform)
-                    self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
+                    #self.get_logger().info('Got transform: x: %d , y: %d' % (x,y))
                     if x > 0 and  x < 8 and y > 0 and y < 9:
                         #todo check if mps already found at position
                         self.classes_type_cyan_arr[x][y][i] += 1
@@ -221,7 +248,67 @@ class TFSniffer(Node):
                     #todo check if mps already found at position
                     self.orientation_magenta_arr[x*-1][y][yaw]  += 1
                 
+    def timer_callback(self):
+        # make table for orientation
+        for y in range(1,9):
+            for x in range(1,8):
+                class_name = ''
+                max_value = 0
+                for i in range(len(self.classes)):
+                    # get max value and class
+                    if self.classes_magenta_arr[x][y][i] > max_value:
+                        max_value = self.classes_magenta_arr[x][y][i]
+                        class_name = self.classes3[i]
+                if max_value > self.min_count:
+                    self.output_magenta[x][y][0] = class_name
+                
+                    max_value = 0
+                    orientation = 5
+                    for i in range(len(self.orientation)):
+                        if self.orientation_magenta_arr[x][y][i] > max_value:
+                            max_value = self.orientation_magenta_arr[x][y][i]
+                            orientation = i
+                    if max_value > self.min_count:
+                        self.output_magenta[x][y][1] = self.get_real_rotation_magenta(x, y, class_name, orientation)
+                
+                class_name = ''
+                max_value = 0
+                for i in range(len(self.classes)):
+                    # get max value and class
+                    if self.classes_type_cyan_arr[x][y][i] > max_value:
+                        max_value = self.classes_type_cyan_arr[x][y][i]
+                        class_name = self.classes3[i]
+                if max_value > self.min_count:
+                    self.output_cyan[x][y][0] = class_name
+                    max_value = 0
+                    orientation = 5
+                    for i in range(len(self.orientation)):
+                        if self.orientation_cyan_arr[x][y][i] > max_value:
+                            max_value = self.orientation_cyan_arr[x][y][i]
+                            orientation = i
+                    if max_value > self.min_count:
+                        self.output_cyan[x][y][1] = self.get_real_rotation_cyan(x, y, class_name, orientation)
+                    
+        self.get_logger().info('   -7  -6  -5  -4  -3  -2  -1  1   2   3   4   5   6   7  ')
+        self.get_logger().info('   --- --- --- --- --- --- --- --- --- --- --- --- --- --- ')
+        for y in range(1,9):
+            string1 = str(9-y) + ' |'
+            string2 = '  |'
+            for x in range(1,8):
+                string1 += self.output_magenta[8-x][9-y][0] + '|'
+                string2 += self.output_magenta[8-x][9-y][1] + '|'
+            for x in range(1,8):
+                string1 += self.output_cyan[x][9-y][0] + '|'
+                string2 += self.output_cyan[x][9-y][1] + '|'
+            self.get_logger().info(string1)
+            self.get_logger().info(string2)
+            self.get_logger().info('   --- --- --- --- --- --- --- --- --- --- --- --- --- --- ')
+            
 
+        
+        
+                
+        
     def shutdown_callback(self):
         for x in range(1,8):
             for y in range(1,9):
@@ -231,20 +318,7 @@ class TFSniffer(Node):
             for y in range(1,9):
                 if self.mps_cyan_arr[x][y] > 0:
                     self.get_logger().info('Cyan MPS %d %d: %d' % (x,y,self.mps_cyan_arr[x][y]))
-        """  # print out arrays in table for class 
 
-        for i in range(len(self.classes)):
-            self.get_logger().info('Magenta %s' % self.classes[i])
-            for x in range(1,8):
-                for y in range(1,9):
-                    if(self.classes_magenta_arr[x][y][i] > 0):
-                        self.get_logger().info('Magenta %s %d %d: %d' % (self.classes[i],x,y,self.classes_magenta_arr[x][y][i]))
-        for i in range(len(self.classes)):
-            self.get_logger().info('Cyan %s' % self.classes[i])
-            for x in range(1,8):
-                for y in range(1,9):
-                    if(self.classes_magenta_arr[x][y][i] > 0):
-                        self.get_logger().info('Cyan %s %d %d: %d' % (self.classes[i],x,y,self.classes_type_cyan_arr[x][y][i])) """
         # print out arrays in table for class with highest count
         for x in range(1,8):
             for y in range(1,9):
@@ -269,7 +343,7 @@ class TFSniffer(Node):
                         class_name = self.classes[i]
                 if max_value > 0:
                     self.get_logger().info('Cyan %s %d %d: %d' % (class_name,x,y,max_value))
-
+        
         #make table for magenta
         #TODO: only print highest values per class (DS, SS, BS, 2xRS, 2xCS)
         self.get_logger().info('   -7 -6 -5 -4 -3 -2 -1 1  2  3  4  5  6  7  ')
@@ -336,7 +410,7 @@ class TFSniffer(Node):
                     output += '   |'
             self.get_logger().info(output)
             self.get_logger().info('   --- --- --- --- --- --- --- --- --- --- --- --- --- --- ')
-        self.get_logger().info(self.tl_magenta_arr)
+        
         self.get_logger().info('Node is shutting down...')
 
             
