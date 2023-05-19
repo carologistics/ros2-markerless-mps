@@ -33,6 +33,8 @@ from rosgraph_msgs.msg import Clock as ClockMsg
 
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy, QoSHistoryPolicy
 
+from message_filters import Subscriber, TimeSynchronizer
+
 qos_profile = QoSProfile(
     reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
     history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST,
@@ -74,10 +76,14 @@ class ObjectDetectorNode(Node):
         self.intrinsics.model = rs2.distortion.brown_conrady
         self.intrinsics.coeffs = [0, 0, 0, 0, 0]
 
-        self.image_sub = self.create_subscription(Image, '/camera/color/image_raw', self.image_callback, 10)
-        self.depth_sub = self.create_subscription(Image, '/camera/aligned_depth_to_color/image_raw', self.depth_callback, 10)
+        self.image_sub = Subscriber(self, Image, '/camera/color/image_raw')
+        self.depth_sub = Subscriber(self, Image, '/camera/aligned_depth_to_color/image_raw')
         self.info_sub = self.create_subscription(CameraInfo, '/camera/color/camera_info', self.info_callback, 10)
         self.image_pub = self.create_publisher(Image, '/camera/color/image_raw_with_detections', 10)
+        
+        # Create a synchronizer for the depth and color images
+        sync = TimeSynchronizer([self.image_sub, self.depth_sub], 10)
+        sync.registerCallback(self.image_callback)
         
         self.tf_static_broadcaster = StaticTransformBroadcaster(self)
         
@@ -122,19 +128,13 @@ class ObjectDetectorNode(Node):
         self.intrinsics.model = rs2.distortion.brown_conrady
         self.intrinsics.coeffs = [0, 0, 0, 0, 0]
 
-    def image_callback(self, msg):
+    def image_callback(self, color_msg, depth_msg):
         #self.get_logger().info('Received image at time: ' + str(msg.header.stamp))
-        cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        time = msg.header.stamp
+        cv_image = self.bridge.imgmsg_to_cv2(color_msg, desired_encoding='bgr8')
+        time = color_msg.header.stamp
         result = self.detect_objects(cv_image)
-        
-        if self.depth_image is not None:
-            #self.get_logger().info('Received message at time: ' + str(time))
-            depth_image = self.bridge.imgmsg_to_cv2(self.depth_image, desired_encoding='passthrough')
-            self.publish_objects(result, depth_image,time)
-    
-    def depth_callback(self, msg):
-        self.depth_image = msg
+        depth_image = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='passthrough')
+        self.publish_objects(result, depth_image,time)
     
     def detect_objects(self, cv_image):
         # Run inference on the image

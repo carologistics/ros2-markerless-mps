@@ -72,11 +72,15 @@ class TFSniffer(Node):
                     if cls == ' SS':
                         return '  0'
                     return '180'
+                if cls == ' SS':
+                    return '180'
                 return '  0'
             if rot == 2:
                 if xoff < 0.5:
                     if cls == ' SS':
                         return ' 90'
+                    return '270'
+                if cls == ' SS':
                     return '270'
                 return ' 90'
             if rot == 1:
@@ -84,11 +88,15 @@ class TFSniffer(Node):
                     if cls == ' SS':
                         return '225'
                     return ' 45'
+                if cls == ' SS':
+                    return ' 45'
                 return '225'
             if rot == 3:
                 if xoff > yoff:
                     if cls == ' SS':
                         return '135'
+                    return '315'
+                if cls == ' SS':
                     return '315'
                 return '135'
         return '   '
@@ -103,11 +111,15 @@ class TFSniffer(Node):
                     if cls == ' SS':
                         return '  0'
                     return '180'
+                if cls == ' SS':
+                    return '180'
                 return '  0'
             if rot == 2:
                 if xoff > 0.5:
                     if cls == ' SS':
                         return ' 90'
+                    return '270'
+                if cls == ' SS':
                     return '270'
                 return ' 90'
             if rot == 1:
@@ -115,11 +127,15 @@ class TFSniffer(Node):
                     if cls == ' SS':
                         return '135'
                     return '315'
+                if cls == ' SS':
+                    return '315'
                 return '135'
             if rot == 3:
                 if xoff < yoff:
                     if cls == ' SS':
                         return '225'
+                    return ' 45'
+                if cls == ' SS':
                     return ' 45'
                 return '225'
         return '   '
