@@ -49,7 +49,7 @@ class TFSniffer(Node):
             self.tf_callback,
             10)
         #call ros timer every 5 seconds
-        backgroud_task_period = 5.0
+        backgroud_task_period = 2.0
         check_task = self.create_timer(backgroud_task_period, self.timer_callback)
 
     def get_position_in_rcll(self, transform):
@@ -199,7 +199,7 @@ class TFSniffer(Node):
                 if self.classes[i] in transform.child_frame_id:
                     try:
                         transform = self.tf_buffer.lookup_transform(
-                            'map', transform.child_frame_id, transform.header.stamp)
+                            'map', transform.child_frame_id, rclpy.time.Time())#transform.header.stamp)
                     except Exception as e:
                         self.get_logger().error('Failed to lookup transform: %s' % str(e))
                         continue #TODO: check if this is correct

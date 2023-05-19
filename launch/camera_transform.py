@@ -21,7 +21,7 @@ def generate_launch_description():
             description='The z-axis value of the static transform.'),
         DeclareLaunchArgument(
             'roll',
-            default_value='-1.0472',
+            default_value='-0.959931',
             description='The roll angle of the static transform.'),
         DeclareLaunchArgument(
             'pitch',
