@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from tf2_ros import TransformListener
+from tf2_ros import TransformListener, TransformBroadcaster
 from geometry_msgs.msg import TransformStamped
 import tf2_ros
 from tf2_msgs.msg import TFMessage
@@ -24,6 +24,10 @@ class TFSniffer(Node):
         self.min_count = 3
         self.tf_buffer = tf2_ros.Buffer(rclpy.duration.Duration(seconds=10.0))
         self.tf_listener = TransformListener(self.tf_buffer, self)
+        
+        #transform publisher
+        self.tf_broadcaster = TransformBroadcaster(self)
+
 
         self.mps_magenta_arr = [[0 for j in range(9)] for i in range(8)]
         self.mps_cyan_arr = [[0 for j in range(9)] for i in range(8)]
@@ -263,6 +267,49 @@ class TFSniffer(Node):
                 elif x < 0 and x > -8 and y > 0 and y < 9:
                     #todo check if mps already found at position
                     self.orientation_magenta_arr[x*-1][y][yaw]  += 1
+                    
+    def publish_transforms(self):
+        for x in range(1,8):
+            for y in range(1,9):
+                if self.output_magenta[x][y][0] != '   ':
+                    #name without leading blank
+                    cls = self.output_magenta[x][y][0][1:]
+                    if (self.output_magenta[x][y][1] != '   '):
+                        rot = int(self.output_magenta[x][y][1])
+                        #publish transform
+                        t = TransformStamped()
+                        t.header.stamp = self.get_clock().now().to_msg()
+                        t.header.frame_id = 'map'
+                        t.child_frame_id = cls + '_M_' + str(x) + '_' + str(y)
+                        t.transform.translation.x = x*(-1)+0.5
+                        t.transform.translation.y = y - 0.5
+                        t.transform.translation.z = 0.0
+                        r = quaternion_from_euler(0, 0, math.radians(rot))
+                        t.transform.rotation.x = r[0]
+                        t.transform.rotation.y = r[1]
+                        t.transform.rotation.z = r[2]
+                        t.transform.rotation.w = r[3]
+                        self.tf_broadcaster.sendTransform(t)
+                        
+                if self.output_cyan[x][y][0] != '   ':
+                    cls = self.output_cyan[x][y][0][1:]
+                    if (self.output_cyan[x][y][1] != '   '):
+                        rot = int(self.output_cyan[x][y][1])
+                        #publish transform
+                        t = TransformStamped()
+                        t.header.stamp = self.get_clock().now().to_msg()
+                        t.header.frame_id = 'map'
+                        t.child_frame_id = cls + '_C_' + str(x) + '_' + str(y)
+                        t.transform.translation.x = x-0.5
+                        t.transform.translation.y = y - 0.5
+                        t.transform.translation.z = 0.0
+                        r = quaternion_from_euler(0, 0, math.radians(rot))
+                        t.transform.rotation.x = r[0]
+                        t.transform.rotation.y = r[1]
+                        t.transform.rotation.z = r[2]
+                        t.transform.rotation.w = r[3]
+                        self.tf_broadcaster.sendTransform(t)                   
+                    
                 
     def timer_callback(self):
         # make table for orientation
@@ -319,6 +366,7 @@ class TFSniffer(Node):
             self.get_logger().info(string1)
             self.get_logger().info(string2)
             self.get_logger().info('   --- --- --- --- --- --- --- --- --- --- --- --- --- --- ')
+        self.publish_transforms()
             
 
         
