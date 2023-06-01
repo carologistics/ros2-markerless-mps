@@ -157,6 +157,7 @@ class TFSniffer(Node):
     
     def tf_callback(self, msg):
         # Check if the transform is from the MPS frame to some other frame
+        #FIX: FILTER TFS THAT ARE PUBLISHED BY THIS NODE
 
         for transform in msg.transforms:
             if  'MPS' in transform.child_frame_id:

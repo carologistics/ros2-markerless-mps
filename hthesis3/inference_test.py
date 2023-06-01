@@ -227,7 +227,7 @@ class ObjectDetectorNode(Node):
             z = depth
             # if class is not tl
             #if bbox[5] != 6:
-            z = depth + 150
+            z = depth + 50
             
             
             #rospy.loginfo("x: " + str(x) + " y: " + str(y) + " z: " + str(z))
