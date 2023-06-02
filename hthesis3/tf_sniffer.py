@@ -160,6 +160,8 @@ class TFSniffer(Node):
         #FIX: FILTER TFS THAT ARE PUBLISHED BY THIS NODE
 
         for transform in msg.transforms:
+            if 'BOX' in transform.child_frame_id:
+                continue
             if  'MPS' in transform.child_frame_id:
                 #transform = self.tf_buffer.lookup_transform('map', 'MPS_0', transform.header.stamp)
                 try:
@@ -281,7 +283,7 @@ class TFSniffer(Node):
                         t = TransformStamped()
                         t.header.stamp = self.get_clock().now().to_msg()
                         t.header.frame_id = 'map'
-                        t.child_frame_id = cls + '_M_' + str(x) + '_' + str(y)
+                        t.child_frame_id = cls + 'BOX_M_' + str(x) + '_' + str(y)
                         t.transform.translation.x = x*(-1)+0.5
                         t.transform.translation.y = y - 0.5
                         t.transform.translation.z = 0.0
