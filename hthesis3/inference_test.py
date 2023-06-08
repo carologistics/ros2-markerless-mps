@@ -37,6 +37,8 @@ from message_filters import Subscriber, TimeSynchronizer
 
 import time 
 
+from std_srvs.srv import SetBool
+
 qos_profile = QoSProfile(
     reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
     history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST,
@@ -89,6 +91,10 @@ class ObjectDetectorNode(Node):
         
         self.tf_static_broadcaster = StaticTransformBroadcaster(self)
         
+        self.enabled = True
+        
+        # create enabled service
+        self.srv = self.create_service(SetBool, 'enable_object_detector', self.enable_object_detector_callback)
         
         #self.transform_buffer = Buffer()
         # Create a transform listener to lookup transforms
@@ -98,9 +104,15 @@ class ObjectDetectorNode(Node):
 
         
         self.current_time = time.time()
-       
+
 
         self.get_logger().info('Object detector node has been started')
+    
+    def enable_object_detector_callback(self, request, response):
+        self.enabled = request.data
+        response.success = True
+        response.message = 'Node is enabled.' if self.enabled else 'Node is disabled.'
+        return response
 
     def send_camera_static_tf(self):
         t = geometry_msgs.msg.TransformStamped()
@@ -132,14 +144,15 @@ class ObjectDetectorNode(Node):
 
     def image_callback(self, color_msg, depth_msg):
         #self.get_logger().info('Received image at time: ' + str(msg.header.stamp))
-        if(time.time() - self.current_time < 0):
-            return
-        self.current_time = time.time()
-        cv_image = self.bridge.imgmsg_to_cv2(color_msg, desired_encoding='bgr8')
-        time_header = color_msg.header.stamp
-        result = self.detect_objects(cv_image)
-        depth_image = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='passthrough')
-        self.publish_objects(result, depth_image,time_header)
+        if(self.enabled):
+            if(time.time() - self.current_time < 0):
+                return
+            self.current_time = time.time()
+            cv_image = self.bridge.imgmsg_to_cv2(color_msg, desired_encoding='bgr8')
+            time_header = color_msg.header.stamp
+            result = self.detect_objects(cv_image)
+            depth_image = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='passthrough')
+            self.publish_objects(result, depth_image,time_header)
     
     def detect_objects(self, cv_image):
         # Run inference on the image
