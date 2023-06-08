@@ -35,6 +35,8 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy, QoS
 
 from message_filters import Subscriber, TimeSynchronizer
 
+import time 
+
 qos_profile = QoSProfile(
     reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
     history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST,
@@ -95,7 +97,7 @@ class ObjectDetectorNode(Node):
         # ros2 run tf2_ros static_transform_publisher --x -0.05 --y 0.1 --z 0.3 --roll -1.74533 --pitch 0.0 --yaw 0.785398 --frame-id robotinobase3plate_top --child-frame-id camera_link
 
         
-        self.current_time = Time()
+        self.current_time = time.time()
        
 
         self.get_logger().info('Object detector node has been started')
@@ -130,11 +132,14 @@ class ObjectDetectorNode(Node):
 
     def image_callback(self, color_msg, depth_msg):
         #self.get_logger().info('Received image at time: ' + str(msg.header.stamp))
+        if(time.time() - self.current_time < 0):
+            return
+        self.current_time = time.time()
         cv_image = self.bridge.imgmsg_to_cv2(color_msg, desired_encoding='bgr8')
-        time = color_msg.header.stamp
+        time_header = color_msg.header.stamp
         result = self.detect_objects(cv_image)
         depth_image = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='passthrough')
-        self.publish_objects(result, depth_image,time)
+        self.publish_objects(result, depth_image,time_header)
     
     def detect_objects(self, cv_image):
         # Run inference on the image
@@ -169,11 +174,11 @@ class ObjectDetectorNode(Node):
         return bboxes
     
     # Define a function to publish a tf transform
-    def publish_tf_transform(self, parent_frame, child_frame, translation, rotation, time):
+    def publish_tf_transform(self, parent_frame, child_frame, translation, rotation, time_header):
         # Create a tf2_ros.TransformStamped message
         
         t = TransformStamped()
-        t.header.stamp = time
+        t.header.stamp = time_header
         t.header.frame_id = parent_frame
         t.child_frame_id = child_frame
         t.transform.translation.x = translation[0] / 1000.0
@@ -189,7 +194,7 @@ class ObjectDetectorNode(Node):
         # Publish the transform
         self.tf_broadcaster.sendTransform(t)    
 
-    def publish_objects(self, bboxes, depth_image, time):
+    def publish_objects(self, bboxes, depth_image, time_header):
         
         for i, bbox in enumerate(bboxes):
             
@@ -245,7 +250,7 @@ class ObjectDetectorNode(Node):
             rotation = [0, 0, 0, 1] # you can set a rotation if you want
 
             # Publish the object as a tf transform
-            self.publish_tf_transform('camera_link', '{}_{}'.format(self.class_names[bbox[5]],object_id), translation, rotation, time)
+            self.publish_tf_transform('camera_link', '{}_{}'.format(self.class_names[bbox[5]],object_id), translation, rotation, time_header)
 
 
 def main(args=None):
