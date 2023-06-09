@@ -21,7 +21,8 @@ class TFSniffer(Node):
     def __init__(self):
         super().__init__('tf_sniffer')
 
-        self.min_count = 3
+        self.min_count = 6
+        self.min_count_laser = 30
         self.tf_buffer = tf2_ros.Buffer(rclpy.duration.Duration(seconds=10.0))
         self.tf_listener = TransformListener(self.tf_buffer, self)
         
@@ -334,7 +335,7 @@ class TFSniffer(Node):
                         if self.orientation_magenta_arr[x][y][i] > max_value:
                             max_value = self.orientation_magenta_arr[x][y][i]
                             orientation = i
-                    if max_value > self.min_count:
+                    if max_value > self.min_count_laser:
                         self.output_magenta[x][y][1] = self.get_real_rotation_magenta(x, y, class_name, orientation)
                 
                 class_name = ''
@@ -352,7 +353,7 @@ class TFSniffer(Node):
                         if self.orientation_cyan_arr[x][y][i] > max_value:
                             max_value = self.orientation_cyan_arr[x][y][i]
                             orientation = i
-                    if max_value > self.min_count:
+                    if max_value > self.min_count_laser:
                         self.output_cyan[x][y][1] = self.get_real_rotation_cyan(x, y, class_name, orientation)
                     
         self.get_logger().info('   -7  -6  -5  -4  -3  -2  -1  1   2   3   4   5   6   7  ')

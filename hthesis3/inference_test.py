@@ -47,7 +47,7 @@ qos_profile = QoSProfile(
 
 class ObjectDetectorNode(Node):
     def __init__(self):
-        super().__init__('object_detector_node')
+        super().__init__('box_detect_node')
 
         model_config = '/home/robotino/mmyolo/configs/rtmdet/rtmdet_tiny_fast_1xb12-40e_cat_1.py'
         model_file = '/home/robotino/ros2_honies_ws/src/hthesis3/model/best_coco_bbox_mAP_epoch_40.pth'
@@ -94,7 +94,7 @@ class ObjectDetectorNode(Node):
         self.enabled = True
         
         # create enabled service
-        self.srv = self.create_service(SetBool, 'enable_object_detector', self.enable_object_detector_callback)
+        self.srv = self.create_service(SetBool, 'enable_box_detect', self.enable_object_detector_callback)
         
         #self.transform_buffer = Buffer()
         # Create a transform listener to lookup transforms
@@ -164,7 +164,7 @@ class ObjectDetectorNode(Node):
         #img = mmcv.imread(cv_image)
         #img = mmcv.imconvert(cv_image, 'bgr', 'rgb')
         bboxes = []
-        score_thr = 0.65
+        score_thr = 0.7
         for i, bbox in enumerate(result.pred_instances.bboxes):
             if(result.pred_instances.scores[i] > score_thr):
                 bboxn = [bbox[0], bbox[1], bbox[2], bbox[3]]
@@ -219,13 +219,16 @@ class ObjectDetectorNode(Node):
 
             # Estimate the position of the object based on the bounding box and the depth image
             depth_roi = depth_image[ymin:ymax, xmin:xmax]
-            #if class is not MPS
+            #if class is not MPS or TL
             if bbox[5] != 3 and bbox[5] != 6:
                 # median depth value of lower 40% of the depth image
                 depth_roi = depth_roi[int(depth_roi.shape[0] * 0.8):]
                 ymin = int(ymin + depth_roi.shape[0] * 0.8)
             
-
+            #filter RS and CS if score is under 0.76
+            if bbox[5] == 1 or bbox[5] == 4:
+                if bbox[4] < 0.76:
+                    continue
             #EXPERIMENTAL
             #if class is MPS
             #if bbox[5] == 3:
@@ -245,7 +248,7 @@ class ObjectDetectorNode(Node):
             z = depth
             # if class is not tl
             #if bbox[5] != 6:
-            z = depth + 50
+            z = depth * 1.04 + 50
             
             
             #rospy.loginfo("x: " + str(x) + " y: " + str(y) + " z: " + str(z))
@@ -254,7 +257,7 @@ class ObjectDetectorNode(Node):
             
             coords = rs2.rs2_deproject_pixel_to_point(self.intrinsics, [x, y], z)
             #rospy.loginfo("class: " + class_names[bbox[5]] + " x: " + str(coords[0]) + " y: " + str(coords[1]) + " z: " + str(coords[2]))
-            #self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]}")
+            #self.get_logger().info(f"class: {self.class_names[bbox[5]]} x: {coords[0]} y: {coords[1]} z: {coords[2]} score: {bbox[4]}")
             if(coords[2] < 0.1):
                 self.get_logger().info("Object too close, ignoring")
                 continue

@@ -28,6 +28,7 @@ setup(
             'tf_sniffer = hthesis3.tf_sniffer:main',
             'inference_test = hthesis3.inference_test:main',
             'image_saver = hthesis3.image_saver:main',
+            'map_navigator = hthesis3.map_navigator:main',
         ],
     },
 )
