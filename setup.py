@@ -2,7 +2,7 @@ from setuptools import setup
 from glob import glob
 import os
 
-package_name = 'hthesis3'
+package_name = 'ros2-markerless-mps'
 
 setup(
     name=package_name,
@@ -12,8 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (f'lib/{package_name}', ["hthesis3/pyrealsense2.cpython-311-x86_64-linux-gnu.so"]),
-        (f'lib/{package_name}', ["hthesis3/librealsense2.so"]),
+        (f'lib/{package_name}', ["ros2-markerless-mps/pyrealsense2.cpython-311-x86_64-linux-gnu.so"]),
+        (f'lib/{package_name}', ["ros2-markerless-mps/librealsense2.so"]),
         (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
     install_requires=['setuptools'],
@@ -25,10 +25,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'tf_sniffer = hthesis3.tf_sniffer:main',
-            'inference_test = hthesis3.inference_test:main',
-            'image_saver = hthesis3.image_saver:main',
-            'map_navigator = hthesis3.map_navigator:main',
+            'tf_sniffer = ros2-markerless-mps.tf_sniffer:main',
+            'inference_test = ros2-markerless-mps.inference_test:main',
+            'image_saver = ros2-markerless-mps.image_saver:main',
+            'map_navigator = ros2-markerless-mps.map_navigator:main',
         ],
     },
 )

@@ -9,7 +9,7 @@ def generate_launch_description():
     use_namespace = LaunchConfiguration('use_namespace')
     camera_transform_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            '/home/robotino/ros2_honies_ws/src/hthesis3/launch/camera_transform.py'
+            '/home/robotino/ros2_honies_ws/src/ros2-markerless-mps/launch/camera_transform.py'
                                       )
     )
 
@@ -21,12 +21,12 @@ def generate_launch_description():
     )
 	# Launch `inference_test` node
     inference_test_node = ExecuteProcess(
-        cmd=['ros2', 'run', 'hthesis3', 'inference_test'],
+        cmd=['ros2', 'run', 'ros2-markerless-mps', 'inference_test'],
         output='screen'
     )
     
     tf_sniffer_node = ExecuteProcess(
-        cmd=['ros2', 'run', 'hthesis3', 'tf_sniffer'],
+        cmd=['ros2', 'run', 'ros2-markerless-mps', 'tf_sniffer'],
         output='screen'
 	)
     return LaunchDescription([
