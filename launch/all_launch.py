@@ -9,14 +9,14 @@ def generate_launch_description():
     use_namespace = LaunchConfiguration('use_namespace')
     camera_transform_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            '/home/robotino/markerless_mps_ws/src/ros2_markerless_mps/launch/camera_transform.py'
+            '/home/robotino/markerless_mps_ws/src/ros2-markerless-mps/launch/camera_transform.py'
                                       )
     )
 
     # Launch `camera_launch.py` launch file
     camera_launch_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            '/home/robotino/markerless_mps_ws/src/ros2_markerless_mps/launch/camera_launch.py'
+            '/home/robotino/markerless_mps_ws/src/ros2-markerless-mps/launch/camera_launch.py'
         )
     )
 	# Launch `inference_test` node
