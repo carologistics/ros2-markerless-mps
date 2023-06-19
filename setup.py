@@ -12,8 +12,6 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (f'lib/{package_name}', ["ros2_markerless_mps/pyrealsense2.cpython-311-x86_64-linux-gnu.so"]),
-        (f'lib/{package_name}', ["ros2_markerless_mps/librealsense2.so"]),
         (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
     install_requires=['setuptools'],
