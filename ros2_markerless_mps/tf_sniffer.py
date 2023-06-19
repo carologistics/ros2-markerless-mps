@@ -184,7 +184,7 @@ class TFSniffer(Node):
                     transform = self.tf_buffer.lookup_transform(
                         'map', transform.child_frame_id, rclpy.time.Time())
                 except Exception as e:
-                    self.get_logger().error('Failed to lookup transform: %s' % str(e))
+                    #self.get_logger().error('Failed to lookup transform: %s' % str(e))
                     continue
                 x, y = self.get_position_in_rcll(transform)
                 xoff = abs(transform.transform.translation.x) % 1.0
@@ -234,7 +234,7 @@ class TFSniffer(Node):
                         transform2 = self.tf_buffer.lookup_transform(
                             'map', transform.child_frame_id[:-1] + '1', rclpy.time.Time())
                 except Exception as e:
-                    self.get_logger().error('Failed to lookup transform: %s' % str(e))
+                    #self.get_logger().error('Failed to lookup transform: %s' % str(e))
                     continue
                 #if(int(transform.transform.translation.x) != int(transform2.transform.translation.x) or int(transform.transform.translation.y) != int(transform2.transform.translation.y)):
                 #    return
