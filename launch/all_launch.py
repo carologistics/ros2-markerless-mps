@@ -12,7 +12,7 @@ def generate_launch_description():
     current_dir_path = os.path.dirname(current_file_path)
     camera_transform_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(current_dir_path, '..', 'launch', 'camera_transform.py')
+            os.path.join(current_dir_path, '..', 'launch', 'camera_transform_launch.py')
                                       )
     )
 
