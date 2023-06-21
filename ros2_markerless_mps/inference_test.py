@@ -53,7 +53,7 @@ class ObjectDetectorNode(Node):
 
         current_file_path = os.path.abspath(__file__)
         package_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))))
-        model_config = os.path.join(package_path, 'model', 'rtmdet_tiny_fast_rcll.py')
+        model_config = os.path.join(package_path, 'share/ros2_markerless_mps/model', 'rtmdet_tiny_fast_rcll.py')
         model_file = os.path.join(package_path, 'share/ros2_markerless_mps/model', 'rcll.pth')
         self.model = init_detector(model_config, model_file, device='cpu')
         self.bridge = CvBridge()
