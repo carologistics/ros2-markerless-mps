@@ -37,6 +37,8 @@ from message_filters import Subscriber, TimeSynchronizer
 
 import time 
 
+import os
+
 from std_srvs.srv import SetBool
 
 qos_profile = QoSProfile(
@@ -49,8 +51,10 @@ class ObjectDetectorNode(Node):
     def __init__(self):
         super().__init__('box_detect_node')
 
-        model_config = '/home/robotino/markerless_mps_ws/src/ros2-markerless-mps/model/rtmdet_tiny_fast_rcll.py'
-        model_file = '/home/robotino/markerless_mps_ws/src/ros2-markerless-mps/model/rcll.pth'
+        current_file_path = os.path.abspath(__file__)
+        package_path = os.path.dirname(os.path.dirname(current_file_path))
+        model_config = os.path.join(package_path, 'model', 'rtmdet_tiny_fast_rcll.py')
+        model_file = os.path.join(package_path, 'model', 'rcll.pth')
         self.model = init_detector(model_config, model_file, device='cpu')
         self.bridge = CvBridge()
         self.depth_image = None
