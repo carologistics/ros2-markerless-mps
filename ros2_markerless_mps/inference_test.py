@@ -49,8 +49,8 @@ class ObjectDetectorNode(Node):
     def __init__(self):
         super().__init__('box_detect_node')
 
-        model_config = '/home/robotino/mmyolo/configs/rtmdet/rtmdet_tiny_fast_1xb12-40e_cat_1.py'
-        model_file = '/home/robotino/markerless_mps_ws/src/ros2-markerless-mps/model/best_coco_bbox_mAP_epoch_40.pth'
+        model_config = '/home/robotino/mmyolo/configs/rtmdet/rtmdet_tiny_fast_rcll.py'
+        model_file = '/home/robotino/markerless_mps_ws/src/ros2-markerless-mps/model/rcll.pth'
         self.model = init_detector(model_config, model_file, device='cpu')
         self.bridge = CvBridge()
         self.depth_image = None
