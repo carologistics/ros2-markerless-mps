@@ -34,7 +34,7 @@ def generate_launch_description():
             description='The yaw angle of the static transform.'),
         DeclareLaunchArgument(
             'frame_id',
-            default_value='robotinobase' + os.environ['ROS_DOMAIN_ID'] + 'plate_top',
+            default_value='robotinobase' + os.environ['ROBOT_ID'] + 'plate_top',
             description='The parent frame ID for the static transform.'),
         DeclareLaunchArgument(
             'child_frame_id',
