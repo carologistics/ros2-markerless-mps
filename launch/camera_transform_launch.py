@@ -9,15 +9,15 @@ def generate_launch_description():
     declare_arguments = [
         DeclareLaunchArgument(
             'x',
-            default_value='0.0',
+            default_value='0.03',
             description='The x-axis value of the static transform.'),
         DeclareLaunchArgument(
             'y',
-            default_value='0.1',
+            default_value='-0.05',
             description='The y-axis value of the static transform.'),
         DeclareLaunchArgument(
             'z',
-            default_value='0.3',
+            default_value='0.33',
             description='The z-axis value of the static transform.'),
         DeclareLaunchArgument(
             'roll',
