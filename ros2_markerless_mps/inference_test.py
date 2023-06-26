@@ -168,7 +168,7 @@ class ObjectDetectorNode(Node):
         #img = mmcv.imread(cv_image)
         #img = mmcv.imconvert(cv_image, 'bgr', 'rgb')
         bboxes = []
-        score_thr = 0.7
+        score_thr = 0.65
         for i, bbox in enumerate(result.pred_instances.bboxes):
             if(result.pred_instances.scores[i] > score_thr):
                 bboxn = [bbox[0], bbox[1], bbox[2], bbox[3]]
