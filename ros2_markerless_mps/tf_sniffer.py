@@ -22,7 +22,7 @@ class TFSniffer(Node):
         super().__init__('tf_sniffer')
 
         self.min_count = 3
-        self.min_count_laser = 35
+        self.min_count_laser = 40
         self.tf_buffer = tf2_ros.Buffer(rclpy.duration.Duration(seconds=10.0))
         self.tf_listener = TransformListener(self.tf_buffer, self)
         
@@ -251,7 +251,7 @@ class TFSniffer(Node):
                     yint = 1
                 xhelp = abs(transform.transform.translation.x %  xint)
                 yhelp = abs(transform.transform.translation.y % yint)
-                if xhelp < 0.15 or xhelp > 0.85 or yhelp < 0.15 or  yhelp > 0.85:
+                if xhelp < 0.18 or xhelp > 0.82 or yhelp < 0.18 or  yhelp > 0.82:
                     continue
                     
                 x, y = self.get_position_in_rcll(transform)
