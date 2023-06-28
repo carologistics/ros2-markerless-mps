@@ -350,11 +350,12 @@ class TFSniffer(Node):
                             max_value = self.orientation_magenta_arr[x][y][i]
                             orientation = i
                     if max_value > self.min_count_laser:
-                        real_rot = int(self.get_real_rotation_magenta(x, y, class_name, orientation))
-                        if self.check_if_pose_legal(x * -1, y, class_name, real_rot):
-                            self.output_magenta[x][y][1] = self.get_real_rotation_magenta(x, y, class_name, orientation)
-                        else:
-                            self.orientation_magenta_arr[x][y][orientation] = 0
+                        if self.get_real_rotation_magenta(x, y, class_name, orientation) != '   ':
+                            real_rot = int(self.get_real_rotation_magenta(x, y, class_name, orientation))
+                            if self.check_if_pose_legal(x * -1, y, class_name, real_rot):
+                                self.output_magenta[x][y][1] = self.get_real_rotation_magenta(x, y, class_name, orientation)
+                            else:
+                                self.orientation_magenta_arr[x][y][orientation] = 0
                 class_name = ''
                 max_value = 0
                 for i in range(len(self.classes)):
@@ -371,11 +372,13 @@ class TFSniffer(Node):
                             max_value = self.orientation_cyan_arr[x][y][i]
                             orientation = i
                     if max_value > self.min_count_laser:
-                        real_rot = int(self.get_real_rotation_magenta(x, y, class_name, orientation))
-                        if self.check_if_pose_legal(x * -1, y, class_name, real_rot):
-                            self.output_cyan[x][y][1] = self.get_real_rotation_cyan(x, y, class_name, orientation)
-                        else:
-                            self.orientation_cyan_arr[x][y][orientation] = 0
+                        if self.get_real_rotation_magenta(x, y, class_name, orientation) != '   ':
+                            real_rot = int(self.get_real_rotation_magenta(x, y, class_name, orientation))
+                            if self.check_if_pose_legal(x * -1, y, class_name, real_rot):
+                                self.output_cyan[x][y][1] = self.get_real_rotation_cyan(x, y, class_name, orientation)
+                            else:
+                                self.orientation_cyan_arr[x][y][orientation] = 0
+                            
                     
         self.get_logger().info('   -7  -6  -5  -4  -3  -2  -1  1   2   3   4   5   6   7  ')
         self.get_logger().info('   --- --- --- --- --- --- --- --- --- --- --- --- --- --- ')
