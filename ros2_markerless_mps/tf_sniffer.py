@@ -163,9 +163,9 @@ class TFSniffer(Node):
     def check_if_pose_legal(self, x, y, cls, rot):
         if cls == ' DS':
             return True
-        if (x == min_x or x == max_x) and (rot != 90 and rot != 270):
+        if (x == self.min_x or x == self.max_x) and (rot != 90 and rot != 270):
             return False
-        if (y == min_y or y == max_y) and (rot != 0 and rot != 180):
+        if (y == self.min_y or y == self.max_y) and (rot != 0 and rot != 180):
             return False
         return True
 
