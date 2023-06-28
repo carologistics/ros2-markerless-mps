@@ -351,7 +351,7 @@ class TFSniffer(Node):
                             orientation = i
                     if max_value > self.min_count_laser:
                         real_rot = int(self.get_real_rotation_magenta(x, y, class_name, orientation))
-                        if check_if_pose_legal(x * -1, y, class_name, real_rot):
+                        if self.check_if_pose_legal(x * -1, y, class_name, real_rot):
                             self.output_magenta[x][y][1] = self.get_real_rotation_magenta(x, y, class_name, orientation)
                         else:
                             self.orientation_magenta_arr[x][y][orientation] = 0
@@ -372,7 +372,7 @@ class TFSniffer(Node):
                             orientation = i
                     if max_value > self.min_count_laser:
                         real_rot = int(self.get_real_rotation_magenta(x, y, class_name, orientation))
-                        if check_if_pose_legal(x * -1, y, class_name, real_rot):
+                        if self.check_if_pose_legal(x * -1, y, class_name, real_rot):
                             self.output_cyan[x][y][1] = self.get_real_rotation_cyan(x, y, class_name, orientation)
                         else:
                             self.orientation_cyan_arr[x][y][orientation] = 0
