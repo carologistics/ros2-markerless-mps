@@ -26,7 +26,7 @@ class TFSniffer(Node):
         self.min_y = 1
         self.max_y = 6
         self.min_count = 3
-        self.min_count_laser = 40
+        self.min_count_laser = 20
         self.tf_buffer = tf2_ros.Buffer(rclpy.duration.Duration(seconds=10.0))
         self.tf_listener = TransformListener(self.tf_buffer, self)
         
